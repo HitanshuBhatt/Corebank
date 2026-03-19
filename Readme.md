@@ -51,7 +51,7 @@ The application is designed to model the workflows of a real-world retail bankin
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -69,7 +69,7 @@ The application is designed to model the workflows of a real-world retail bankin
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 Corebank/
@@ -94,7 +94,7 @@ Corebank/
 
 ---
 
-## ✅ Prerequisites
+##  Prerequisites
 
 Ensure the following are installed before running the application:
 
