@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>CoreBank - Login</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #eef2f7;
+            font-family: "Segoe UI", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background: white;
+            width: 380px;
+            padding: 40px 35px;
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+            text-align: center;
+        }
+
+        .brand-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #0b1e4a;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #0b1e4a;
+            box-shadow: 0 0 3px rgba(11,30,74,0.4);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 18px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-login {
+            background: #0b1e4a;
+            color: white;
+        }
+
+        .btn-login:hover {
+            background: #0a1738;
+        }
+
+        .btn-register {
+            background: #28a745;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .btn-register:hover {
+            background: #1e7e34;
+        }
+
+        .error-text {
+            color: red;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <div class="brand-title">CoreBank</div>
+
+    <form method="post" action="/login">
+
+        <input type="text" name="username" placeholder="Username" required />
+        <input type="password" name="password" placeholder="Password" required />
+
+        <button type="submit" class="btn btn-login">Login</button>
+
+        <p th:if="${param.error}" class="error-text">Invalid username or password.</p>
+    </form>
+
+    <button onclick="window.location='/register'" class="btn btn-register">
+        Create New Account
+    </button>
+
+</div>
+
+</body>
+</html>

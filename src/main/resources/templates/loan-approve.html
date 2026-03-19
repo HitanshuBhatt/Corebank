@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Loan Approval – CoreBank</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f0f4ff;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background: darkslategray;
+            padding-top: 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 22px;
+            text-decoration: none;
+            color: #b3c5ff;
+            font-size: 15px;
+        }
+
+        .sidebar a:hover,
+        .sidebar .active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-radius: 6px;
+        }
+
+        .page-wrapper {
+            margin-left: 260px;
+            padding: 40px 50px;
+        }
+        table thead {
+            background: #0b1e4a;
+            color: white;
+        }
+        table tbody tr:nth-child(even) {
+            background: #f7f9ff;
+        }
+    </style>
+</head>
+
+<body>
+
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h3 class="text-center text-white mb-4">CoreBank</h3>
+
+    <a class="active" href="/dashboard">Dashboard</a>
+    <a href="/accounts">Accounts</a>
+    <a href="/transactions">Transactions</a>
+    <a href="/loan/apply">Apply Loan</a>
+    <a href="/credit-cards">Credit Cards</a>
+    <a href="/bill-payments">Bill Payments</a>
+    <a href="/logout">Logout</a>
+</div>
+
+<div class="page-wrapper">
+
+    <h1 class="fw-bold">Loan Approval Panel</h1>
+    <p class="text-muted">Approve or reject customer loan requests.</p>
+
+    <table class="table table-bordered mt-4">
+        <thead>
+        <tr>
+            <th>Loan ID</th>
+            <th>Amount</th>
+            <th>Term</th>
+            <th>Applied</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="loan : ${pendingLoans}">
+            <td th:text="${loan.id}"></td>
+            <td th:text="${loan.amount}"></td>
+            <td th:text="${loan.termMonths}"></td>
+            <td th:text="${#temporals.format(loan.createdAt,'yyyy-MM-dd HH:mm')}"></td>
+
+            <td>
+                <form th:action="@{'/employee/loans/approve/' + ${loan.id}}" method="post" style="display:inline;">
+                    <button class="btn btn-success btn-sm">Approve</button>
+                </form>
+
+                <form th:action="@{'/employee/loans/reject/' + ${loan.id}}" method="post" style="display:inline;">
+                    <button class="btn btn-danger btn-sm">Reject</button>
+                </form>
+            </td>
+        </tr>
+
+        <tr th:if="${pendingLoans.size() == 0}">
+            <td colspan="5" class="text-center py-3">No pending loans.</td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>

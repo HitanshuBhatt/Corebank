@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Bill Payment - CoreBank</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f4f6fb;
+            font-family: "Segoe UI", sans-serif;
+            margin: 0;
+        }
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background: darkslategray;
+            padding-top: 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 22px;
+            text-decoration: none;
+            color: #b3c5ff;
+            font-size: 15px;
+        }
+
+        .sidebar a:hover,
+        .sidebar .active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-radius: 6px;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 40px 50px;
+        }
+        .card-box {
+            background: white;
+            padding: 35px;
+            border-radius: 14px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h3 class="text-center text-white mb-4">CoreBank</h3>
+
+    <a class="active" href="/dashboard">Dashboard</a>
+    <a href="/accounts">Accounts</a>
+    <a href="/transactions">Transactions</a>
+    <a href="/loan/apply">Apply Loan</a>
+    <a href="/credit-cards">Credit Cards</a>
+    <a href="/bill-payments">Bill Payments</a>
+    <a href="/logout">Logout</a>
+</div>
+
+<div class="main-content">
+    <h1 class="fw-bold mb-3">Submit Bill Payment</h1>
+    <p class="text-muted mb-4">
+        Employees can submit bill payments on behalf of customers. The amount will be deducted
+        from the selected account and recorded in the account statement.
+    </p>
+
+    <div class="card-box">
+
+        <form th:action="@{/bill-payments/submit}" method="post">
+
+            <!-- Account Dropdown -->
+            <div class="mb-3">
+                <label class="form-label">From Account</label>
+                <select class="form-select" name="accountId" required>
+                    <option value="" disabled selected>Select account</option>
+                    <option th:each="acc : ${accounts}"
+                            th:value="${acc.id}"
+                            th:text="${acc.accountNumber + ' - ' + (acc.accountName != null ? acc.accountName : '')}">
+                    </option>
+                </select>
+            </div>
+
+            <!-- Title -->
+            <div class="mb-3">
+                <label class="form-label">Payment Title</label>
+                <input type="text" class="form-control" name="title"
+                       placeholder="e.g. Car Loan Payment on behalf of customer" required>
+            </div>
+
+            <!-- Amount -->
+            <div class="mb-3">
+                <label class="form-label">Amount (CAD)</label>
+                <input type="number" class="form-control" name="amount" min="0.01" step="0.01" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Payment</button>
+            <a href="/bill-payments" class="btn btn-link">View All Payments</a>
+        </form>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+/* Basic reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #000 100%);
+    color: #e5e7eb;
+}
+
+/* Auth Wrapper */
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    background: rgba(15, 23, 42, 0.9);
+    border-radius: 1rem;
+    padding: 2rem 2.25rem;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+/* Titles */
+.app-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+    color: #38bdf8;
+    letter-spacing: 0.03em;
+}
+
+.auth-title {
+    font-size: 1.25rem;
+    color: #e5e7eb;
+    margin-bottom: 1.5rem;
+}
+
+/* Form */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    color: #cbd5f5;
+}
+
+.form-group input {
+    padding: 0.65rem 0.75rem;
+    border-radius: 0.6rem;
+    border: 1px solid rgba(148, 163, 184, 0.7);
+    background: rgba(15, 23, 42, 0.9);
+    color: #e5e7eb;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-group input:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.3);
+}
+
+/* Buttons */
+.btn {
+    border: none;
+    cursor: pointer;
+    border-radius: 999px;
+    padding: 0.6rem 1rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease;
+}
+
+.primary-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    color: #0b1120;
+    margin-top: 0.5rem;
+}
+
+.primary-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 25px rgba(56, 189, 248, 0.35);
+}
+
+.secondary-btn {
+    background: transparent;
+    color: #e5e7eb;
+    border: 1px solid rgba(148, 163, 184, 0.8);
+}
+
+.secondary-btn:hover {
+    background: rgba(15, 23, 42, 0.6);
+}
+
+.tiny-btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+/* Messages */
+.message {
+    min-height: 1.2rem;
+    font-size: 0.85rem;
+}
+
+.message.error {
+    color: #fca5a5;
+}
+
+.message.success {
+    color: #6ee7b7;
+}
+
+/* Auth Switch */
+.auth-switch {
+    margin-top: 1.3rem;
+    font-size: 0.9rem;
+    text-align: center;
+    color: #9ca3af;
+}
+
+.auth-switch a {
+    color: #38bdf8;
+    text-decoration: none;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+/* Dashboard */
+.dashboard-wrapper {
+    min-height: 100vh;
+    padding: 1.5rem 1.75rem 2rem;
+}
+
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.welcome-text {
+    color: #cbd5f5;
+    font-size: 0.95rem;
+}
+
+.dashboard-main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.dash-card {
+    background: rgba(15, 23, 42, 0.9);
+    border-radius: 0.9rem;
+    padding: 1rem;
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.dash-card h3 {
+    font-size: 1rem;
+    color: #e5e7eb;
+}
+
+.dash-card p {
+    font-size: 0.85rem;
+    color: #9ca3af;
+}
+
+.dashboard-section {
+    background: rgba(15, 23, 42, 0.9);
+    border-radius: 0.9rem;
+    padding: 1rem;
+    border: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+.dashboard-section h2 {
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+}

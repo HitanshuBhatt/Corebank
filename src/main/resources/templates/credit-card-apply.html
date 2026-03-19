@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Apply for Credit Card</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f4f6fb;
+            font-family: "Segoe UI", sans-serif;
+            margin: 0;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background: darkslategray;
+            padding-top: 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 22px;
+            text-decoration: none;
+            color: #b3c5ff;
+            font-size: 15px;
+        }
+
+        .sidebar a:hover,
+        .sidebar .active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-radius: 6px;
+        }
+
+
+        .main-content {
+            margin-left: 260px;
+            padding: 40px 50px;
+        }
+
+        .card-box {
+            background: white;
+            padding: 35px;
+            border-radius: 14px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            max-width: 550px;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .submit-btn {
+            background: #2e59d9;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            color: white;
+        }
+
+        .submit-btn:hover {
+            background: #1b4cc2;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h3 class="text-center text-white mb-4">CoreBank</h3>
+
+    <a class="active" href="/dashboard">Dashboard</a>
+    <a href="/accounts">Accounts</a>
+    <a href="/transactions">Transactions</a>
+    <a href="/loan/apply">Apply Loan</a>
+    <a href="/credit-cards">Credit Cards</a>
+    <a href="/bill-payments">Bill Payments</a>
+    <a href="/logout">Logout</a>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+    <!-- FLASH MESSAGE -->
+    <div th:if="${toastSuccess}" class="alert alert-success" th:text="${toastSuccess}"></div>
+    <div th:if="${toastError}" class="alert alert-danger" th:text="${toastError}"></div>
+
+    <h1 class="fw-bold mb-2">Apply for a Credit Card</h1>
+    <p class="text-muted mb-4">Enter account number and credit score. The system will automatically approve or reject.</p>
+
+    <div class="card-box">
+
+        <!-- Step 1: Account Number -->
+        <label class="form-label">Enter Account Number</label>
+        <input type="number" id="accountNumber" class="form-control" placeholder="e.g. 100045" />
+
+        <button class="btn btn-primary mt-3" onclick="validateAccount()">Validate Account</button>
+
+        <!-- Error -->
+        <div id="accountError" class="alert alert-danger mt-3" style="display:none;">
+            ❌ Invalid account number
+        </div>
+
+        <!-- Step 2: Credit Score -->
+        <form id="scoreForm" action="/credit-cards/apply" method="post" style="display:none;" class="mt-4">
+
+            <input type="hidden" id="accountId" name="accountId">
+
+            <label class="form-label">Enter Credit Score (300–850)</label>
+            <input type="number" name="creditScore" class="form-control" required>
+
+            <button type="submit" class="submit-btn mt-3">Submit Application</button>
+        </form>
+
+        <!-- RESULT -->
+        <div th:if="${creditCard}" class="mt-4">
+
+            <div th:if="${creditCard.status == 'REJECTED'}" class="alert alert-danger">
+                ❌ Application Rejected — Credit Score Too Low
+            </div>
+
+            <div th:if="${creditCard.status == 'APPROVED'}" class="alert alert-success">
+                ✅ Application Approved!<br>
+                Credit Limit: <b th:text="${creditCard.creditLimit}"></b><br>
+                Card Number: <b th:text="${creditCard.cardNumber}"></b>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function validateAccount() {
+        let acc = document.getElementById("accountNumber").value;
+
+        fetch(`/credit-cards/validate-account?accountNumber=` + acc)
+            .then(response => response.text())
+            .then(data => {
+                if (data === "INVALID") {
+                    document.getElementById("accountError").style.display = "block";
+                    document.getElementById("scoreForm").style.display = "none";
+                    return;
+                }
+
+                document.getElementById("accountError").style.display = "none";
+                document.getElementById("scoreForm").style.display = "block";
+
+                document.getElementById("accountId").value = data;
+            });
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

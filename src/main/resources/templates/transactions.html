@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Transactions – CoreBank</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            background:#f0f4ff;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background: darkslategray;
+            padding-top: 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 22px;
+            text-decoration: none;
+            color: #b3c5ff;
+            font-size: 15px;
+        }
+
+        .sidebar a:hover,
+        .sidebar .active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-radius: 6px;
+        }
+
+        .page-wrapper {
+            margin-left: 260px;
+            padding: 40px 50px;
+        }
+
+        .content-card {
+            background:lightslategray;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* BADGE COLORS */
+        .badge-deposit { background: #198754 !important; }
+        .badge-withdraw { background: #dc3545 !important; }
+        .badge-transfer { background: #6f42c1 !important; }
+        .badge-loan_applied { background: #0d6efd !important; }
+        .badge-bill_payment { background: black !important; }
+        table thead {
+            background: #0b1e4a;
+            color: white;
+        }
+
+        table tbody tr:nth-child(even) {
+            background: #f7f9ff;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h3 class="text-center text-white mb-4">CoreBank</h3>
+
+    <a class="active" href="/dashboard">Dashboard</a>
+    <a href="/accounts">Accounts</a>
+    <a href="/transactions">Transactions</a>
+    <a href="/loan/apply">Apply Loan</a>
+    <a href="/credit-cards">Credit Cards</a>
+    <a href="/bill-payments">Bill Payments</a>
+    <a href="/logout">Logout</a>
+</div>
+
+
+<!-- MAIN CONTENT -->
+<div class="page-wrapper">
+
+    <h1 class="fw-bold">All Transactions</h1>
+    <p class="text-muted">View full transaction history.</p>
+
+    <div class="content-card">
+
+        <table class="table table-bordered align-middle">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Account</th>
+                <th>Statement</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="t : ${transactions}">
+                <!-- Date -->
+                <td th:text="${#temporals.format(t.timestamp, 'yyyy-MM-dd HH:mm')}"></td>
+
+                <!-- Type Badge -->
+                <td>
+                    <span class="badge"
+                          th:classappend="'badge-' + ${t.type.toString().toLowerCase()}">
+                        <span th:text="${t.type}"></span>
+                    </span>
+                </td>
+
+                <!-- Amount -->
+                <td th:text="${t.amount}"></td>
+
+                <!-- Account -->
+                <td th:text="${t.account.accountNumber}"></td>
+
+                <!-- PDF -->
+                <td>
+                    <a th:href="@{'/accounts/' + ${t.account.id} + '/statement'}">
+                        Download PDF
+                    </a>
+                </td>
+            </tr>
+
+            <!-- Empty -->
+            <tr th:if="${#lists.isEmpty(transactions)}">
+                <td colspan="5" class="text-center py-3">
+                    No transactions available.
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+</body>
+</html>

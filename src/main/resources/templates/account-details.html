@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Account Details - CoreBank</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f6fc;
+            margin: 0;
+        }
+
+        .dashboard-container {
+            display: flex;
+        }
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background: darkslategray;
+            padding-top: 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 22px;
+            text-decoration: none;
+            color: #b3c5ff;
+            font-size: 15px;
+        }
+
+        .sidebar a:hover,
+        .sidebar .active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-radius: 6px;
+        }
+
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 260px;
+            padding: 40px 50px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 25px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        /* CARD STYLING */
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            max-width: 700px;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 18px;
+            color: #0b1e4a;
+        }
+
+        .card p {
+            font-size: 16px;
+            margin: 8px 0;
+            color: #444;
+        }
+
+        /* BUTTON STYLES */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-right: 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+
+        .btn-primary {
+            background: #2e59d9;
+            color: white !important;
+        }
+
+        .btn-secondary {
+            background: #d1d5db;
+            color: #333 !important;
+        }
+
+        /* CREDIT CARD BOX */
+        .card-body h5 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #0b1e4a;
+        }
+
+        .mt-4 { margin-top: 25px !important; }
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h3 class="text-center text-white mb-4">CoreBank</h3>
+
+        <a class="active" href="/dashboard">Dashboard</a>
+        <a href="/accounts">Accounts</a>
+        <a href="/transactions">Transactions</a>
+        <a href="/loan/apply">Apply Loan</a>
+        <a href="/credit-cards">Credit Cards</a>
+        <a href="/bill-payments">Bill Payments</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <h1>Account Details</h1>
+
+        <div class="card">
+            <h2 th:text="'Account #' + ${account.accountNumber}"></h2>
+
+            <p><strong>Type:</strong>
+                <span th:text="${account.type}"></span>
+            </p>
+
+            <p><strong>Balance:</strong>
+                $<span th:text="${account.balance}"></span>
+            </p>
+
+            <p><strong>Status:</strong>
+                <span th:text="${account.status}"></span>
+            </p>
+        </div>
+
+        <!-- CREDIT CARD INFO -->
+        <div class="card mt-4" th:if="${creditCard}">
+            <div class="card-body">
+                <h5 class="card-title">Credit Card</h5>
+
+                <p><strong>Status:</strong> <span th:text="${creditCard.status}"></span></p>
+                <p><strong>Credit Limit:</strong> $10,000 CAD</p>
+                <p><strong>Card Number:</strong> <span th:text="${creditCard.cardNumber}"></span></p>
+            </div>
+        </div>
+
+        <br>
+
+        <a th:href="@{'/accounts/' + ${account.id} + '/statement'}"
+           class="btn btn-primary">Download Statement (PDF)</a>
+
+        <a href="/accounts" class="btn btn-secondary">Back to Accounts</a>
+
+    </div>
+
+</div>
+
+
+<script src="/js/auth.js"></script>
+
+</body>
+</html>

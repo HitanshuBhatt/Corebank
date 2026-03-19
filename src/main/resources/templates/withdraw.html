@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Withdraw – CoreBank</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f0f4ff;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background: darkslategray;
+            padding-top: 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 22px;
+            text-decoration: none;
+            color: #b3c5ff;
+            font-size: 15px;
+        }
+
+        .sidebar a:hover,
+        .sidebar .active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-radius: 6px;
+        }
+
+
+        /* MAIN CONTENT */
+        .page-wrapper {
+            margin-left: 260px;
+            padding: 40px 50px;
+        }
+
+        .content-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-width: 550px;
+        }
+
+        h1 {
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #0b1e4a;
+        }
+
+        label {
+            font-weight: 600;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h3 class="text-center text-white mb-4">CoreBank</h3>
+
+    <a class="active" href="/dashboard">Dashboard</a>
+    <a href="/accounts">Accounts</a>
+    <a href="/transactions">Transactions</a>
+    <a href="/loan/apply">Apply Loan</a>
+    <a href="/credit-cards">Credit Cards</a>
+    <a href="/bill-payments">Bill Payments</a>
+    <a href="/logout">Logout</a>
+</div>
+
+
+<!-- MAIN CONTENT -->
+<div class="page-wrapper">
+    <h1>Withdraw Money</h1>
+    <p class="text-muted">Withdraw funds from your selected account.</p>
+
+    <div class="content-card">
+
+        <label class="form-label">Enter Withdrawal Amount</label>
+        <input type="number" id="amount" min="1" step="0.01" class="form-control mb-3">
+
+        <button onclick="makeWithdraw()" class="btn btn-danger w-100">
+            Withdraw
+        </button>
+
+        <!-- BACK TO ACCOUNTS BUTTON -->
+        <a th:href="@{'/accounts/view/' + ${accountId}}" class="btn back-btn">
+            Back to Account
+        </a>
+
+    </div>
+</div>
+
+<script th:inline="javascript">
+    function makeWithdraw() {
+
+        const amount = document.getElementById("amount").value;
+        const accountId = [[${accountId}]];  // Thymeleaf variable
+
+        fetch("/api/transactions/" + accountId + "/withdraw?amount=" + amount, {
+            method: "POST"
+        })
+            .then(r => {
+                if (!r.ok) throw new Error("Withdraw failed");
+                return r.text();
+            })
+            .then(_ => {
+                alert("Withdraw Successful!");
+                window.location.href = "/accounts/view/" + accountId;
+            })
+            .catch(err => alert("Error: " + err));
+    }
+</script>
+
+</body>
+</html>

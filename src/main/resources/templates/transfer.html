@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Transfer Money</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #eef3ff;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .box {
+            width: 450px;
+            margin: 80px auto;
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background: darkslategray;
+            padding-top: 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 22px;
+            text-decoration: none;
+            color: #b3c5ff;
+            font-size: 15px;
+        }
+
+        .sidebar a:hover,
+        .sidebar .active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-radius: 6px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h3 class="text-center text-white mb-4">CoreBank</h3>
+
+        <a class="active" href="/dashboard">Dashboard</a>
+        <a href="/accounts">Accounts</a>
+        <a href="/transactions">Transactions</a>
+        <a href="/loan/apply">Apply Loan</a>
+        <a href="/credit-cards">Credit Cards</a>
+        <a href="/bill-payments">Bill Payments</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <h2 class="text-center mb-3">Transfer Money</h2>
+
+    <label class="fw-bold">Send To:</label>
+    <select class="form-control" id="toAccount">
+        <option th:each="a : ${accounts}"
+                th:if="${a.id} != ${accountId}"
+                th:value="${a.id}"
+                th:text="${a.accountNumber} + ' - ' + (a.owner != null ? a.owner.firstName : 'No Owner')">
+        </option>
+    </select>
+
+    <label class="fw-bold mt-3">Amount:</label>
+    <input class="form-control" type="number" id="amount">
+
+    <button onclick="makeTransfer()" class="btn btn-primary w-100 mt-3">
+        Transfer
+    </button>
+
+    <a th:href="@{'/accounts/view/' + ${accountId}}" class="btn btn-secondary w-100 mt-2">
+        Back
+    </a>
+
+</div>
+
+<script th:inline="javascript">
+
+    function makeTransfer() {
+        const toId = document.getElementById("toAccount").value;
+        const amount = document.getElementById("amount").value;
+        const fromId = [[${accountId}]];
+
+        fetch(`/api/transactions/${fromId}/transfer?toId=${toId}&amount=${amount}`, {
+            method: "POST"
+        })
+            .then(r => {
+                if (!r.ok) throw new Error("Transfer failed");
+                return r.json();
+            })
+            .then(_ => {
+                alert("Transfer Successful!");
+                window.location.href = `/accounts/view/${fromId}`;
+            })
+            .catch(err => alert("Error: " + err));
+    }
+
+</script>
+
+</body>
+</html>

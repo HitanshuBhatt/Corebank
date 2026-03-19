@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>My Accounts</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <style>
+        body {
+            background: #f4f6fb;
+            font-family: "Segoe UI", sans-serif;
+            margin: 0;
+        }
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background: darkslategray;
+            padding-top: 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 22px;
+            text-decoration: none;
+            color: #b3c5ff;
+            font-size: 15px;
+        }
+
+        .sidebar a:hover,
+        .sidebar .active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-radius: 6px;
+        }
+
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 260px;
+            padding: 40px 50px;
+        }
+
+        .accounts-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px 12px;
+            font-size: 15px;
+            border-bottom: 1px solid #f1f3f7;
+        }
+
+        th {
+            font-size: 14px;
+            color: #8392a5;
+            border-bottom: 2px solid #edf0f7;
+        }
+
+        tr:hover {
+            background: #f8fbff;
+        }
+
+        /* Button Styling */
+        .action-buttons a,
+        .action-buttons button {
+            margin-right: 6px;
+            padding: 6px 11px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-view { background: #2e59d9; }
+        .btn-edit { background: #6f42c1; }
+        .btn-green { background: #28a745; }
+        .btn-red { background: #dc3545; }
+        .btn-yellow { background: #ffc107; color: black!important; }
+        .btn-blue { background: #17a2b8; }
+
+        .btn-view:hover { background: #1b4cc2; }
+        .btn-edit:hover { background: #59359c; }
+        .btn-green:hover { background: #1e7e34; }
+        .btn-red:hover { background: #b52a36; }
+        .btn-yellow:hover { background: #d39e00; }
+        .btn-blue:hover { background: #117a8b; }
+
+    </style>
+</head>
+
+<body>
+<!-- SIDEBAR-->
+<div class="sidebar">
+    <h3 class="text-center text-white mb-4">CoreBank</h3>
+
+    <a class="active" href="/dashboard">Dashboard</a>
+    <a href="/accounts">Accounts</a>
+    <a href="/transactions">Transactions</a>
+    <a href="/loan/apply">Apply Loan</a>
+    <a href="/credit-cards">Credit Cards</a>
+    <a href="/bill-payments">Bill Payments</a>
+    <a href="/logout">Logout</a>
+</div>
+
+
+<!-- MAIN PAGE -->
+<div class="main-content">
+
+    <h1 class="fw-bold">My Accounts</h1>
+    <p class="text-muted">View your accounts and perform financial actions.</p>
+
+    <a href="/accounts/create" class="btn btn-primary mb-3">+ Create Account</a>
+
+    <!-- ALERTS -->
+    <div th:if="${param.error == 'cannotdelete'}" class="alert alert-warning">
+        This account cannot be deleted because it has transactions.<br>
+        It has been marked as <b>CLOSED</b> instead.
+    </div>
+
+    <div th:if="${param.success == 'deleted'}" class="alert alert-success">
+        Account permanently deleted.
+    </div>
+
+    <div th:if="${param.success == 'closed'}" class="alert alert-info">
+        Account successfully closed.
+    </div>
+
+    <!-- ACCOUNT TABLE -->
+    <div class="accounts-card">
+        <table>
+            <thead>
+            <tr>
+                <th>Account Number</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Balance</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="acc : ${accounts}">
+                <td th:text="${acc.accountNumber}"></td>
+                <td th:text="${acc.type}"></td>
+
+                <td>
+                    <span th:text="${acc.status}"
+                          th:classappend="${acc.status == 'CLOSED'} ? 'text-danger fw-bold' : ''">
+                    </span>
+                </td>
+
+                <td th:text="${acc.balance}"></td>
+
+                <td class="action-buttons">
+
+                    <!-- 🔥 FIXED VIEW LINK! -->
+                    <a th:href="@{'/accounts/view/' + ${acc.id}}"
+                       class="btn-view">View</a>
+
+                    <a th:href="@{'/accounts/edit/' + ${acc.id}}"
+                       th:if="${acc.status != 'CLOSED'}"
+                       class="btn-edit">Edit</a>
+
+                    <!-- CLOSE ACCOUNT -->
+                    <button class="btn-red"
+                            th:if="${acc.status != 'CLOSED'}"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteModal"
+                            th:attr="data-id=${acc.id}">
+                        Close
+                    </button>
+
+                    <!-- DISABLE TRANSACTIONS IF CLOSED -->
+                    <a th:href="@{'/accounts/' + ${acc.id} + '/deposit'}"
+                       th:if="${acc.status != 'CLOSED'}"
+                       class="btn-green">Deposit</a>
+
+                    <a th:href="@{'/accounts/' + ${acc.id} + '/withdraw'}"
+                       th:if="${acc.status != 'CLOSED'}"
+                       class="btn-red">Withdraw</a>
+
+                    <a th:href="@{'/accounts/' + ${acc.id} + '/transfer'}"
+                       th:if="${acc.status != 'CLOSED'}"
+                       class="btn-yellow">Transfer</a>
+
+                    <a th:href="@{'/transactions/account/' + ${acc.id}}"
+                       class="btn-blue">Transactions</a>
+
+                </td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+</div>
+
+<!-- CLOSE ACCOUNT MODAL -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form method="post" class="modal-content" id="deleteForm">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Close Account</h5>
+            </div>
+
+            <div class="modal-body">
+                <p>
+                    Are you sure you want to <b>close this account</b>?<br><br>
+                    <small class="text-muted">
+                        • If it has transactions → it will be CLOSED.<br>
+                        • If not → it will be permanently DELETED.<br>
+                        • Balance must be <b>0.00</b>.
+                    </small>
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">Cancel</button>
+
+                <button type="submit" class="btn btn-danger">Yes, Close Account</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    const modal = document.getElementById("deleteModal");
+    modal.addEventListener("show.bs.modal", function (event) {
+        const button = event.relatedTarget;
+        const id = button.getAttribute("data-id");
+        document.getElementById("deleteForm").action = "/accounts/delete/" + id;
+    });
+</script>
+
+</body>
+</html>

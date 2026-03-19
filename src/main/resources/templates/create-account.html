@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Account</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f4f6fb;
+            font-family: "Segoe UI", sans-serif;
+            margin: 0;
+        }
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background: darkslategray;
+            padding-top: 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 22px;
+            text-decoration: none;
+            color: #b3c5ff;
+            font-size: 15px;
+        }
+
+        .sidebar a:hover,
+        .sidebar .active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-radius: 6px;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 40px 50px;
+        }
+        .form-card {
+            background: white;
+            padding: 30px;
+            width: 550px;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #d4d7dc;
+            margin-bottom: 18px;
+        }
+        .btn-create {
+            background: #2e59d9;
+            padding: 10px 16px;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-create:hover {
+            background: #1b4cc2;
+        }
+    </style>
+</head>
+
+<body>
+
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h3 class="text-center text-white mb-4">CoreBank</h3>
+
+    <a class="active" href="/dashboard">Dashboard</a>
+    <a href="/accounts">Accounts</a>
+    <a href="/transactions">Transactions</a>
+    <a href="/loan/apply">Apply Loan</a>
+    <a href="/credit-cards">Credit Cards</a>
+    <a href="/bill-payments">Bill Payments</a>
+    <a href="/logout">Logout</a>
+</div>
+
+<div class="main-content">
+
+    <h1 class="fw-bold">Create New Account</h1>
+    <p class="text-muted">Fill the details below to create a new bank account.</p>
+
+    <div class="form-card">
+        <form th:action="@{/accounts/create}" method="post">
+
+            <label class="fw-semibold">Account Number</label>
+            <input required type="text" name="number" placeholder="e.g., 12345" class="form-input">
+
+            <label class="fw-semibold">Account Type</label>
+            <select name="type" class="form-input" required>
+                <option value="SAVINGS">SAVINGS</option>
+                <option value="CHECKING">CHECKING</option>
+            </select>
+
+            <button type="submit" class="btn-create">Create Account</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Dashboard – CoreBank</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f0f4ff;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+        }
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background: darkslategray;
+            padding-top: 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 22px;
+            text-decoration: none;
+            color: #b3c5ff;
+            font-size: 15px;
+        }
+
+        .sidebar a:hover,
+        .sidebar .active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-radius: 6px;
+        }
+
+
+        .page-wrapper {
+            margin-left: 260px;
+            padding: 40px 50px;
+        }
+
+        .content-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            padding: 22px;
+            border-radius: 12px;
+            text-align: center;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-title {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .stat-value {
+            font-size: 26px;
+            font-weight: bold;
+            color: #0b1e4a;
+        }
+
+        table thead {
+            background: #0b1e4a;
+            color: white;
+        }
+
+        table tbody tr:nth-child(even) {
+            background: #f7f9ff;
+        }
+    </style>
+</head>
+
+<body>
+
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h3 class="text-center text-white mb-4">CoreBank</h3>
+
+    <a class="active" href="/dashboard">Dashboard</a>
+    <a href="/accounts">Accounts</a>
+    <a href="/transactions">Transactions</a>
+    <a href="/loan/apply">Apply Loan</a>
+    <a href="/credit-cards">Credit Cards</a>
+    <a href="/bill-payments">Bill Payments</a>
+    <a href="/logout">Logout</a>
+</div>
+
+<div class="page-wrapper">
+
+    <h1 class="fw-bold">Dashboard</h1>
+    <p class="text-muted">Overview of your accounts and loan activity.</p>
+
+    <div class="content-card">
+
+        <!-- ==================== STATS CARDS ==================== -->
+        <div class="dashboard-cards">
+
+            <div class="stat-box">
+                <div class="stat-title">Your Accounts</div>
+                <div class="stat-value" th:text="${totalAccounts}">0</div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-title">Bank Accounts</div>
+                <div class="stat-value" th:text="${bankAccounts}">0</div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-title">Total Balance</div>
+                <div class="stat-value" th:text="${totalBalance}">0</div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-title">Active Loans</div>
+                <div class="stat-value" th:text="${activeLoans}">0</div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-title">Credit Cards</div>
+                <div class="stat-value" th:text="${totalCards}">0</div>
+            </div>
+
+            <!-- 🔴 New: Monthly Spending -->
+            <div class="stat-box">
+                <div class="stat-title">Spent This Month</div>
+                <div class="stat-value" th:text="'$' + ${monthlySpending}">0</div>
+            </div>
+
+        </div>
+
+        <!-- ==================== LOANS TABLE ==================== -->
+        <h4 class="fw-bold mt-4">Loan Applications</h4>
+
+        <table class="table table-bordered align-middle">
+            <thead>
+            <tr>
+                <th>Loan ID</th>
+                <th>Amount</th>
+                <th>Remaining</th>
+                <th>Status</th>
+                <th>Term</th>
+                <th>Applied</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="loan : ${allLoans}">
+                <td th:text="${loan.id}"></td>
+                <td th:text="${loan.amount}"></td>
+                <td th:text="${loan.remaining}"></td>
+
+                <td>
+                    <span class="badge bg-warning text-dark"
+                          th:if="${loan.status.toString().toUpperCase()=='PENDING'}">PENDING</span>
+
+                    <span class="badge bg-success"
+                          th:if="${loan.status.toString().toUpperCase()=='APPROVED'}">APPROVED</span>
+
+                    <span class="badge bg-danger"
+                          th:if="${loan.status.toString().toUpperCase()=='REJECTED'}">REJECTED</span>
+                </td>
+
+                <td th:text="${loan.termMonths}"></td>
+                <td th:text="${#temporals.format(loan.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+
+                <td>
+                    <div th:if="${loan.status.toString().toUpperCase()=='PENDING'}">
+
+                        <form th:action="@{'/loan/approve/' + ${loan.id}}" method="post" style="display:inline;">
+                            <button class="btn btn-success btn-sm">Approve</button>
+                        </form>
+
+                        <form th:action="@{'/loan/reject/' + ${loan.id}}" method="post" style="display:inline;">
+                            <button class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+
+                    </div>
+
+                    <span th:if="${loan.status.toString().toUpperCase()!='PENDING'}">—</span>
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>

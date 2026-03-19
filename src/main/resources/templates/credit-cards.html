@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Credit Cards – CoreBank</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f0f4ff;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+        }
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background: darkslategray;
+            padding-top: 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 22px;
+            text-decoration: none;
+            color: #b3c5ff;
+            font-size: 15px;
+        }
+
+        .sidebar a:hover,
+        .sidebar .active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-radius: 6px;
+        }
+
+
+        /* MAIN CONTENT */
+        .page-wrapper {
+            margin-left: 260px;
+            padding: 40px 50px;
+        }
+
+        .content-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .credit-card-box {
+            background: linear-gradient(135deg, #1f3b73, #4e73df);
+            color: white;
+            padding: 25px;
+            border-radius: 14px;
+            width: 350px;
+            box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
+            margin-bottom: 25px;
+        }
+
+        .label {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .big-text {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .status-active { background: #28a745; color:white; }
+        .status-locked { background: #ffc107; color:black; }
+        .status-cancelled { background: #dc3545; color:white; }
+        .status-replaced { background: #6f42c1; color:white; }
+
+        .apply-btn {
+            background: #4e73df;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .apply-btn:hover {
+            background: #3958c4;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h3 class="text-center text-white mb-4">CoreBank</h3>
+
+    <a class="active" href="/dashboard">Dashboard</a>
+    <a href="/accounts">Accounts</a>
+    <a href="/transactions">Transactions</a>
+    <a href="/loan/apply">Apply Loan</a>
+    <a href="/credit-cards">Credit Cards</a>
+    <a href="/bill-payments">Bill Payments</a>
+    <a href="/logout">Logout</a>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="page-wrapper">
+
+    <h1 class="fw-bold">My Credit Card</h1>
+    <p class="text-muted">View your credit card details or apply for a new card.</p>
+
+    <div class="content-card">
+
+        <!-- If user has NO card -->
+        <div th:if="${creditCard == null}" class="text-center py-4">
+            <h4>You do not have a credit card yet.</h4>
+            <a href="/credit-cards/apply" class="apply-btn mt-3">Apply for Credit Card</a>
+        </div>
+
+        <!-- If user HAS a card -->
+        <div th:if="${creditCard != null}">
+
+            <!-- CREDIT CARD UI CARD -->
+            <div class="credit-card-box">
+                <div class="label">CARD NUMBER</div>
+                <div class="big-text" th:text="${creditCard.cardNumber}">**** **** **** 1234</div>
+
+                <div class="mt-3 label">CARD HOLDER</div>
+                <div class="big-text" th:text="${creditCard.owner.fullName}">John Doe</div>
+
+                <div class="mt-3 d-flex justify-content-between">
+                    <div>
+                        <div class="label">LIMIT</div>
+                        <div class="big-text" th:text="'$' + ${creditCard.limitAmount}">$2000</div>
+                    </div>
+
+                    <div>
+                        <div class="label">STATUS</div>
+                        <span class="status-badge"
+                              th:classappend="
+                                ${creditCard.status.toString() == 'ACTIVE'} ? ' status-active' :
+                                ${creditCard.status.toString() == 'LOCKED'} ? ' status-locked' :
+                                ${creditCard.status.toString() == 'CANCELLED'} ? ' status-cancelled' :
+                                ' status-replaced'
+                              "
+                              th:text="${creditCard.status}">
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <hr>
+
+            <h5 class="fw-bold mt-4">Card Actions</h5>
+
+            <a href="/credit-card/lock" class="btn btn-warning me-2">Lock Card</a>
+            <a href="/credit-card/unlock" class="btn btn-success me-2">Unlock Card</a>
+            <a href="/credit-card/replace" class="btn btn-secondary me-2">Replace Card</a>
+            <a href="/credit-card/cancel" class="btn btn-danger">Cancel Card</a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

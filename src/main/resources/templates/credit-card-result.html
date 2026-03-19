@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Credit Card Result</title>
+</head>
+<body>
+
+<!-- side bar -->
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h3 class="text-center text-white mb-4">CoreBank</h3>
+
+    <a class="active" href="/dashboard">Dashboard</a>
+    <a href="/accounts">Accounts</a>
+    <a href="/transactions">Transactions</a>
+    <a href="/loan/apply">Apply Loan</a>
+    <a href="/credit-cards">Credit Cards</a>
+    <a href="/bill-payments">Bill Payments</a>
+    <a href="/logout">Logout</a>
+</div>
+<!-- end -->
+<h2>Credit Card Application Result</h2>
+
+<div th:if="${card.status.toString() == 'ACTIVE'}">
+    <h3 style="color:green;">Approved!</h3>
+    <p>Your credit card number:</p>
+    <h2 th:text="${card.cardNumber}"></h2>
+</div>
+
+<div th:if="${card.status.toString() != 'ACTIVE'}">
+    <h3 style="color:red;">Rejected</h3>
+    <p>Your credit score is too low.</p>
+</div>
+ <!--side bar style -->
+<style>
+    /* SIDEBAR */
+    .sidebar {
+        width: 240px;
+        height: 100vh;
+        background: darkslategray;
+        padding-top: 30px;
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+
+    .sidebar a {
+        display: block;
+        padding: 12px 22px;
+        text-decoration: none;
+        color: #b3c5ff;
+        font-size: 15px;
+    }
+
+    .sidebar a:hover,
+    .sidebar .active {
+        background: rgba(255,255,255,0.15);
+        color: white;
+        border-radius: 6px;
+    }
+
+</style>
+<a href="/dashboard" class="btn btn-primary mt-3">Back to Dashboard</a>
+
+</body>
+</html>
